@@ -1,17 +1,14 @@
+import React from 'react';
 import styled from 'styled-components';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+
 import db from '../db.json';
 
 import Widget from '../src/components/Widget';
 import Footer from '../src/components/Footer';
 import GitHubCorner from '../src/components/GitHubCorner';
 import QuizBackground from '../src/components/QuizBackground';
-
-// const BackgroundImage = styled.div`
-//   background-image: url(${db.bg});
-//   flex: 1;
-//   background-size: cover;
-//   background-position: center;
-// `;
 
 export const QuizContainer = styled.div`
   width: 100%;
@@ -25,15 +22,36 @@ export const QuizContainer = styled.div`
 `;
 
 export default function Home() {
+  const router = useRouter();
+  const [name, setName] = React.useState('');
+
   return (
     <QuizBackground backgroundImage={db.bg}>
+      <Head>
+        <title>ISSO É UMA SIMULAÇÃO</title>
+      </Head>
+
       <QuizContainer>
         <Widget>
           <Widget.Header>
             <h1>Título do Widget</h1>
           </Widget.Header>
           <Widget.Content>
-            <p>Teste testes testes</p>
+            <form onSubmit={ (event) => {
+              event.preventDefault();
+              router.push(`/quiz?name=${name}`)
+              console.log("Submissão de dados");
+            }}>
+              <input
+                onChange={ (event) => {
+                  setName(event.target.value);
+                }}
+                placeholder="Insira seu nome" 
+              />
+              <button type="submit" disabled={name.length === 0}>
+                Jogar {name}
+              </button>
+            </form>
           </Widget.Content>
         </Widget>
 
@@ -49,7 +67,7 @@ export default function Home() {
         <Footer />
       </QuizContainer>
 
-      <GitHubCorner projectUrl='https://github.com/paulorobcss'/>
+      <GitHubCorner projectUrl="https://github.com/paulorobcss/imersao_react_next_alura" />
     </QuizBackground>
   );
 }
